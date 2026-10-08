@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { UkMeteor, UkmonFilters } from './types';
-import { filterUkMeteors, reportUrl, showerColors, SPORADIC_COLOR, trackWeight } from './ukmon';
+import {
+  fallPointMonths,
+  filterUkMeteors,
+  formatMass,
+  reportUrl,
+  showerColors,
+  SPORADIC_COLOR,
+  trackWeight,
+} from './ukmon';
 
 const ev = (id: string, shower: string, mag: number | null): UkMeteor => ({
   id,
@@ -56,5 +64,20 @@ describe('helpers', () => {
     expect(reportUrl('20260424_000052.674_UK')).toBe(
       'https://archive.ukmeteors.co.uk/reports/2026/orbits/202604/20260424/20260424_000052.674_UK/index.html',
     );
+  });
+});
+
+describe('fall points', () => {
+  it('lists modelled months newest first', () => {
+    expect(fallPointMonths({ '20260501_x': 1, '20260402_y': 1, '20260530_z': 1 })).toEqual([
+      '2026-05',
+      '2026-04',
+    ]);
+  });
+
+  it('formats masses', () => {
+    expect(formatMass(0.0005)).toBe('0.5 g');
+    expect(formatMass(187)).toBe('187 kg');
+    expect(formatMass(8_820_000)).toBe('8,820 t');
   });
 });

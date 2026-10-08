@@ -6,7 +6,9 @@ An interactive map with two views:
 - **UK meteors:** meteors seen by two or more [UK Meteor Network](https://ukmeteornetwork.org/)
   cameras, drawn as tracks over the ground and coloured by shower, with month, day,
   shower and brightness filters. Click a track for heights, speed, cameras and a link
-  to the UKMON report. Open it directly with `#uk-meteors`.
+  to the UKMON report. Open it directly with `#uk-meteors`. Tick **Show modelled
+  landing sites** to see where meteorites would land if bodies large enough to survive
+  had followed those paths (see [`analysis/`](analysis/README.md)).
 
 It's a static site, so it can be published anywhere (GitHub Pages, Netlify, Cloudflare Pages, S3…).
 

@@ -1,10 +1,14 @@
 import './style.css';
 import { filterMeteorites, formatMass, loadMeteorites } from './data';
 import { createMap } from './map';
-import type { Filters, Meteorite, UkMeteor, UkmonFilters, UkmonIndex } from './types';
+import type { FallPoint, Filters, Meteorite, UkMeteor, UkmonFilters, UkmonIndex } from './types';
 import {
+  FALL_COLOR,
+  fallPointMonths,
   filterUkMeteors,
+  formatMass as formatKg,
   formatMonth,
+  IMPACT_COLOR,
   OTHER_COLOR,
   reportUrl,
   showerColors,
@@ -20,6 +24,7 @@ const detailsEl = $('#details');
 const landingsForm = $<HTMLFormElement>('#filters');
 const ukForm = $<HTMLFormElement>('#uk-filters');
 const legendEl = $('#legend');
+const fallHintEl = $('#fall-hint');
 const map = createMap($('#map'));
 const dataUrl = (path: string) => `${import.meta.env.BASE_URL}data/${path}`;
 
@@ -97,6 +102,17 @@ let ukIndex: UkmonIndex | null = null;
 const ukMonths = new Map<string, Promise<UkMeteor[]>>();
 let ukMonth: UkMeteor[] = [];
 
+let fallPoints: Record<string, FallPoint> | null = null;
+async function loadFallPoints(): Promise<Record<string, FallPoint>> {
+  if (!fallPoints) {
+    const res = await fetch(dataUrl('ukmon/fall-points.json'));
+    fallPoints = res.ok ? ((await res.json()) as Record<string, FallPoint>) : {};
+  }
+  return fallPoints;
+}
+const showingFallPoints = () =>
+  (ukForm.elements.namedItem('fallPoints') as HTMLInputElement).checked;
+
 const showerName = (code: string) =>
   code === SPORADIC ? 'Sporadic' : (ukIndex?.showers[code] ?? code);
 
@@ -157,21 +173,32 @@ function refreshUkOptions(month: string) {
   );
 }
 
-function renderLegend(colors: Map<string, string>, visible: readonly UkMeteor[]) {
+function renderLegend(
+  colors: Map<string, string>,
+  visible: readonly UkMeteor[],
+  points?: Record<string, FallPoint>,
+) {
   const counts = showerCounts(visible);
   const items = counts.filter(([code]) => colors.has(code));
   const others = counts.filter(([code]) => !colors.has(code)).reduce((n, [, c]) => n + c, 0);
-  const rows: [string, string, number][] = items.map(([code, n]) => [
+  const rows: [string, string, number, boolean?][] = items.map(([code, n]) => [
     colors.get(code)!,
     showerName(code),
     n,
   ]);
   if (others) rows.push([OTHER_COLOR, 'Other showers', others]);
+  if (points) {
+    const types = visible.map((m) => points[m.id]?.type);
+    const falls = types.filter((t) => t === 'meteorite fall').length;
+    const impacts = types.filter((t) => t === 'hypervelocity impact').length;
+    if (falls) rows.push([FALL_COLOR, 'Modelled meteorite fall site', falls, true]);
+    if (impacts) rows.push([IMPACT_COLOR, 'Modelled high-speed impact site', impacts, true]);
+  }
   legendEl.replaceChildren(
-    ...rows.map(([color, label, n]) => {
+    ...rows.map(([color, label, n, dot]) => {
       const li = document.createElement('li');
       const swatch = document.createElement('span');
-      swatch.className = 'swatch';
+      swatch.className = dot ? 'swatch dot' : 'swatch';
       swatch.style.background = color;
       li.append(swatch, `${label} — ${n.toLocaleString()}`);
       return li;
@@ -194,6 +221,38 @@ function showUkMeteor(m: UkMeteor) {
     ],
     ['View UKMON report ↗', reportUrl(m.id)],
   );
+  const fp = fallPoints?.[m.id];
+  if (fp && showingFallPoints()) appendFallPointDetails(fp);
+}
+
+function appendFallPointDetails(fp: FallPoint) {
+  const h = document.createElement('h3');
+  h.textContent = 'Modelled landing site';
+  const note = document.createElement('p');
+  note.className = 'hint';
+  note.textContent =
+    fp.burnoutKm != null
+      ? `The real meteoroid burnt up (modelled at ${fp.burnoutKm} km). This is where a meteorite would land if a rocky body large enough to survive had followed the same path.`
+      : 'This is where a meteorite would land if a rocky body large enough to survive had followed the same path.';
+  const dl = document.createElement('dl');
+  const rows: [string, string][] =
+    fp.lat == null || fp.lon == null
+      ? [['Result', 'No size of body on this path reaches the ground']]
+      : [
+          ['Type', fp.type === 'meteorite fall' ? 'Meteorite fall (≥ 1 g)' : 'High-speed impact'],
+          ['Location', `${fp.lat.toFixed(3)}, ${fp.lon.toFixed(3)}`],
+          ['Body needed', `${formatKg(fp.minMassKg)} (${fp.diameterM ?? '?'} m across)`],
+          ['Free fall from', fp.darkFlightKm != null ? `${fp.darkFlightKm} km` : '—'],
+          ['Impact speed', fp.impactSpeed != null ? `${fp.impactSpeed} m/s` : 'Unknown'],
+        ];
+  for (const [k, v] of rows) {
+    const dt = document.createElement('dt');
+    dt.textContent = k;
+    const dd = document.createElement('dd');
+    dd.textContent = v;
+    dl.append(dt, dd);
+  }
+  detailsEl.append(h, note, dl);
 }
 
 let ukRenderToken = 0;
@@ -228,11 +287,19 @@ async function updateUk(monthChanged = false) {
     }
     if (token !== ukRenderToken) return;
 
-    const visible = filterUkMeteors(ukMonth, readUkFilters());
+    let visible = filterUkMeteors(ukMonth, readUkFilters());
+    let points: Record<string, FallPoint> | undefined;
+    if (showingFallPoints()) {
+      points = await loadFallPoints();
+      if (token !== ukRenderToken) return;
+      visible = visible.filter((m) => points![m.id]);
+    }
     const colors = showerColors(visible);
-    map.renderTracks(visible, colors, showUkMeteor);
-    renderLegend(colors, visible);
-    statsEl.textContent = `Showing ${visible.length.toLocaleString()} of ${ukMonth.length.toLocaleString()} UK meteors in ${formatMonth(month)}`;
+    map.renderTracks(visible, colors, showUkMeteor, points);
+    renderLegend(colors, visible, points);
+    statsEl.textContent = points
+      ? `Showing ${visible.length.toLocaleString()} modelled UK meteors in ${formatMonth(month)}`
+      : `Showing ${visible.length.toLocaleString()} of ${ukMonth.length.toLocaleString()} UK meteors in ${formatMonth(month)}`;
   } catch (err) {
     console.error(err);
     if (token === ukRenderToken) statsEl.textContent = 'Could not load UK meteor data.';
@@ -265,8 +332,33 @@ window.addEventListener('hashchange', () => setMode(modeFromHash()));
 landingsForm.addEventListener('input', updateLandings);
 // "reset" fires before the fields are cleared, so defer the refresh.
 landingsForm.addEventListener('reset', () => setTimeout(updateLandings));
-ukForm.addEventListener('input', (e) => {
-  const monthChanged = (e.target as HTMLElement).getAttribute('name') === 'month';
+async function onFallPointsToggle(): Promise<boolean> {
+  if (!showingFallPoints()) {
+    fallHintEl.hidden = true;
+    return false;
+  }
+  const months = fallPointMonths(await loadFallPoints());
+  fallHintEl.hidden = false;
+  fallHintEl.textContent = months.length
+    ? `Hypothetical: where a meteorite would land if a body big enough to survive had followed each path. Modelled so far: ${months.map(formatMonth).join(', ')}. Dashed lines run from where the meteor was last seen to the landing site.`
+    : 'No meteors have been modelled yet.';
+  const monthSelect = ukForm.elements.namedItem('month') as HTMLSelectElement;
+  if (months.length && !months.includes(monthSelect.value)) {
+    monthSelect.value = months[0];
+    (ukForm.elements.namedItem('day') as HTMLSelectElement).value = '';
+    return true;
+  }
+  return false;
+}
+
+ukForm.addEventListener('input', async (e) => {
+  const name = (e.target as HTMLElement).getAttribute('name');
+  if (name === 'fallPoints') {
+    const monthChanged = await onFallPointsToggle();
+    void updateUk(monthChanged);
+    return;
+  }
+  const monthChanged = name === 'month';
   if (monthChanged) (ukForm.elements.namedItem('day') as HTMLSelectElement).value = '';
   void updateUk(monthChanged);
 });

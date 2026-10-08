@@ -271,6 +271,8 @@ def main():
     p.add_argument('--month', required=True, help='YYYYMM')
     p.add_argument('--shower', default='', help='substring of the shower name, e.g. "Cygnid"')
     p.add_argument('--out', default=os.path.join(os.path.dirname(__file__), 'output'))
+    p.add_argument('--publish', action='store_true',
+                   help='also merge the results into public/data/ukmon/fall-points.json for the map')
     args = p.parse_args()
 
     files = sorted(glob.glob(os.path.join(args.summary_dir, args.month[:4], f'{args.month}*.json')))
@@ -290,6 +292,34 @@ def main():
     with open(stem + '.json', 'w') as f:
         json.dump(rows, f, indent=1)
     print(f'wrote {stem}.csv and .json')
+    if args.publish:
+        publish(rows)
+
+
+SITE_FILE = os.path.join(os.path.dirname(__file__), '..', 'public', 'data', 'ukmon', 'fall-points.json')
+
+
+def publish(rows):
+    """Merges compact results (keyed by event id) into the site's fall-points file."""
+    try:
+        with open(SITE_FILE) as f:
+            site = json.load(f)
+    except FileNotFoundError:
+        site = {}
+    for r in rows:
+        site[r['id']] = {
+            'type': r['stony_landing_type'],
+            'lat': r['stony_landing_lat'],
+            'lon': r['stony_landing_lon'],
+            'minMassKg': r['stony_min_initial_mass_kg'],
+            'diameterM': r['stony_min_diameter_m'],
+            'impactSpeed': r['stony_impact_speed_m_s'],
+            'darkFlightKm': r['stony_dark_flight_start_km'],
+            'burnoutKm': r['cometary_model_end_height_km'],
+        }
+    with open(SITE_FILE, 'w') as f:
+        json.dump(dict(sorted(site.items())), f, separators=(',', ':'))
+    print(f'merged {len(rows)} results into {os.path.relpath(SITE_FILE)}')
 
 
 if __name__ == '__main__':

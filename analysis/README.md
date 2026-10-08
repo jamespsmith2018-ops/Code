@@ -9,6 +9,10 @@ python3 analysis/fall_points.py ../uk-meteor-data/data/summary --month 202605 --
 ```
 
 Output goes to `analysis/output/<shower>-<month>.csv` and `.json`, one row per meteor.
+Add `--publish` to also merge the results into `public/data/ukmon/fall-points.json`,
+which the site shows when **Show modelled landing sites** is ticked in the UK meteors
+view. It shows the stony-scenario landing sites, with dashed lines from where each
+meteor was last seen.
 Requires only Python 3 (standard library).
 
 ## Method

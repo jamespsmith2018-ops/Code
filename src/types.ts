@@ -61,3 +61,23 @@ export interface UkmonFilters {
   /** Day of month, or null for the whole month. */
   day: number | null;
 }
+
+/**
+ * Modelled landing site for a UKMON meteor (analysis/fall_points.py, stony scenario):
+ * where a >= 1 g meteorite would land if a body big enough to drop one had
+ * followed the same trajectory. Hypothetical: the observed meteoroids burnt up.
+ */
+export interface FallPoint {
+  type: 'meteorite fall' | 'hypervelocity impact' | string;
+  lat: number | null;
+  lon: number | null;
+  /** Smallest initial mass (kg) that would put >= 1 g on the ground. */
+  minMassKg: number | null;
+  diameterM: number | null;
+  /** Ground impact speed (m/s). */
+  impactSpeed: number | null;
+  /** Height (km) at which dark flight starts. */
+  darkFlightKm: number | null;
+  /** Height (km) where the observed meteoroid is modelled to burn out (cometary). */
+  burnoutKm: number | null;
+}

@@ -61,3 +61,19 @@ export function formatMonth(month: string): string {
     timeZone: 'UTC',
   });
 }
+
+export const FALL_COLOR = '#f8fafc';
+export const IMPACT_COLOR = '#ef4444';
+
+/** Months ("YYYY-MM") that have modelled fall points, newest first. */
+export function fallPointMonths(points: Record<string, unknown>): string[] {
+  const months = new Set(Object.keys(points).map((id) => `${id.slice(0, 4)}-${id.slice(4, 6)}`));
+  return [...months].sort().reverse();
+}
+
+export function formatMass(kg: number | null): string {
+  if (kg == null) return 'Unknown';
+  if (kg >= 1000) return `${(kg / 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })} t`;
+  if (kg >= 1) return `${kg.toLocaleString(undefined, { maximumFractionDigits: 0 })} kg`;
+  return `${(kg * 1000).toLocaleString(undefined, { maximumFractionDigits: 2 })} g`;
+}
