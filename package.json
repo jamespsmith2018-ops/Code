@@ -12,7 +12,8 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "fetch-data": "node scripts/fetch-data.mjs"
+    "fetch-data": "node scripts/fetch-data.mjs",
+    "ukmon": "node scripts/build-ukmon.mjs"
   },
   "engines": {
     "node": ">=20"

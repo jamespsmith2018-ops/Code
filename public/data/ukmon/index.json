@@ -1,0 +1,25 @@
+{
+ "months": [
+  {
+   "month": "2026-04",
+   "count": 477
+  }
+ ],
+ "showers": {
+  "AHE": "April 102 Herculids",
+  "ARC": "April rho Cygnids",
+  "AVB": "alpha Virginids",
+  "BCO": "beta Comae Berenicids",
+  "BCY": "beta Cygnids",
+  "BTC": "beta2 Cygnids",
+  "DLI": "mu Virginids",
+  "EDR": "epsilon Draconids",
+  "ILI": "iota1 Librids",
+  "LYR": "April Lyrids",
+  "NHE": "90 Herculids",
+  "RLY": "R Lyrids",
+  "TAL": "22 Aquilids",
+  "ZCY": "zeta Cygnids"
+ },
+ "updated": "2026-10-08T13:28:25.126Z"
+}

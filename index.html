@@ -21,7 +21,12 @@
 
     <main class="layout">
       <aside class="sidebar" aria-label="Filters">
-        <form id="filters" class="filters">
+        <nav class="tabs" role="tablist" aria-label="Dataset">
+          <a href="#landings" role="tab" data-mode="landings">Meteorite landings</a>
+          <a href="#uk-meteors" role="tab" data-mode="uk">UK meteors</a>
+        </nav>
+
+        <form id="filters" class="filters" data-panel="landings">
           <label>
             Name
             <input type="search" name="query" placeholder="e.g. Allende" autocomplete="off" />
@@ -50,6 +55,53 @@
           <button type="reset">Clear filters</button>
         </form>
 
+        <form id="uk-filters" class="filters" data-panel="uk" hidden>
+          <p class="hint">
+            Meteors seen by two or more
+            <a href="https://ukmeteornetwork.org/" target="_blank" rel="noopener"
+              >UK Meteor Network</a
+            >
+            cameras. Each line is the meteor's path over the ground; the dot is where it ended.
+          </p>
+
+          <label>
+            Month
+            <select name="month"></select>
+          </label>
+
+          <label>
+            Day
+            <select name="day">
+              <option value="">Whole month</option>
+            </select>
+          </label>
+
+          <label>
+            Shower
+            <select name="shower">
+              <option value="all">All showers</option>
+            </select>
+          </label>
+
+          <label>
+            Brightness
+            <select name="maxMag">
+              <option value="">Any</option>
+              <option value="2">Magnitude 2 or brighter</option>
+              <option value="0">Magnitude 0 or brighter</option>
+              <option value="-2">Magnitude -2 or brighter</option>
+              <option value="-4">Fireballs (-4 or brighter)</option>
+            </select>
+          </label>
+
+          <label class="check">
+            <input type="checkbox" name="hideSporadic" />
+            Hide sporadic meteors
+          </label>
+
+          <ul id="legend" class="legend"></ul>
+        </form>
+
         <section id="details" class="details" hidden></section>
       </aside>
 
@@ -61,6 +113,7 @@
       <a href="https://data.nasa.gov/" target="_blank" rel="noopener"
         >NASA Meteoritical Society Meteorite Landings</a
       >
+      · <a href="https://ukmeteornetwork.org/" target="_blank" rel="noopener">UK Meteor Network</a>
       · Map ©
       <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener"
         >OpenStreetMap</a

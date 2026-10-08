@@ -1,7 +1,14 @@
 # ☄️ Meteorite Tracker
 
-An interactive map for exploring recorded meteorite landings, built as a static
-site so it can be published anywhere (GitHub Pages, Netlify, Cloudflare Pages, S3…).
+An interactive map with two views:
+
+- **Meteorite landings:** recorded meteorite falls and finds worldwide (NASA / Meteoritical Society).
+- **UK meteors:** meteors seen by two or more [UK Meteor Network](https://ukmeteornetwork.org/)
+  cameras, drawn as tracks over the ground and coloured by shower, with month, day,
+  shower and brightness filters. Click a track for heights, speed, cameras and a link
+  to the UKMON report. Open it directly with `#uk-meteors`.
+
+It's a static site, so it can be published anywhere (GitHub Pages, Netlify, Cloudflare Pages, S3…).
 
 **Stack:** [Vite](https://vite.dev) · TypeScript · [Leaflet](https://leafletjs.com) ·
 [Vitest](https://vitest.dev) · Prettier. No backend required.
@@ -23,6 +30,7 @@ npm run dev          # http://localhost:5173 with hot reload
 | `npm test`           | Run unit tests                                     |
 | `npm run format`     | Format all files with Prettier                     |
 | `npm run fetch-data` | Download the full NASA dataset into `public/data/` |
+| `npm run ukmon -- …` | Build the UK meteor files (see below)              |
 
 ## Data
 
@@ -42,6 +50,27 @@ The deploy workflow runs `fetch-data` on every build, so the published site
 gets the full dataset even though the repo only stores the sample. To restore
 the sample locally: `cp scripts/sample-data.json public/data/meteorites.json`.
 
+### UK meteors
+
+The UK view loads `public/data/ukmon/index.json` (available months and shower
+names) and one `public/data/ukmon/YYYY-MM.json` per month, shaped like `UkMeteor`
+in [`src/types.ts`](src/types.ts). These files are built from the UKMON
+[matches summary API](https://api.ukmeteors.co.uk/matches?reqtyp=summary&reqval=20260424)
+and committed to the repo.
+
+```bash
+# from a checkout of the uk-meteor-data repo (daily summary files)
+npm run ukmon -- --from ../uk-meteor-data/data/summary
+# or straight from the API
+npm run ukmon -- --start 2026-09-01 --end 2026-09-30
+npm run ukmon -- --days 7
+npm run ukmon -- --resume      # newest built day (minus 3) up to today
+```
+
+Re-fetched days replace what was there; other days are kept. The deploy
+workflow runs `--resume` before every build and also runs daily, so the
+published site stays current.
+
 ## Project layout
 
 ```
@@ -53,6 +82,9 @@ src/types.ts            shared types
 src/style.css           styles (dark theme, responsive layout)
 scripts/fetch-data.mjs  dataset downloader
 scripts/normalize.mjs   raw NASA row → Meteorite conversion (JSON + CSV)
+scripts/build-ukmon.mjs UK meteor month files builder
+scripts/ukmon.mjs       raw UKMON event → UkMeteor conversion
+src/ukmon.ts            UK meteor filtering, colours and links
 public/data/            data served as-is with the site
 .github/workflows/      CI checks and GitHub Pages deployment
 ```

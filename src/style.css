@@ -18,6 +18,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   height: 100%;
@@ -163,4 +167,72 @@ button:hover {
     border-right: 0;
     border-bottom: 1px solid var(--border);
   }
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.tabs a {
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+  text-decoration: none;
+}
+
+.tabs a[aria-selected='true'] {
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.filters label.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.swatch {
+  flex: none;
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.details > a {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
 }

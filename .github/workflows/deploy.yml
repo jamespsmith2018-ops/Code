@@ -5,6 +5,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Daily rebuild so the UK meteor data stays current.
+  schedule:
+    - cron: '41 7 * * *'
   workflow_dispatch:
 
 permissions:
@@ -35,6 +38,11 @@ jobs:
         continue-on-error: true
         env:
           METEORITE_DATA_URL: ${{ vars.METEORITE_DATA_URL }}
+
+      # Top up UK Meteor Network data from the newest committed day to today.
+      - name: Refresh UK meteor data
+        run: npm run ukmon -- --resume
+        continue-on-error: true
 
       - id: pages
         uses: actions/configure-pages@v5
