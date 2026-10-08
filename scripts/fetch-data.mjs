@@ -11,18 +11,33 @@ import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { normalizeAll, parseCsv } from './normalize.mjs';
 
-const DEFAULT_URL = 'https://data.nasa.gov/resource/gh4g-8sxz.json?$limit=100000';
-const url = process.env.METEORITE_DATA_URL || DEFAULT_URL;
+// NASA retired the old Socrata API (it now 404s); the CSV moved under /docs/legacy/.
+const DEFAULT_URLS = [
+  'https://data.nasa.gov/docs/legacy/meteorite_landings/Meteorite_Landings.csv',
+  'https://data.nasa.gov/resource/gh4g-8sxz.json?$limit=100000',
+];
+const urls = process.env.METEORITE_DATA_URL ? [process.env.METEORITE_DATA_URL] : DEFAULT_URLS;
 const outFile = fileURLToPath(new URL('../public/data/meteorites.json', import.meta.url));
 
-console.log(`Fetching ${url}`);
-const res = await fetch(url);
-if (!res.ok) {
-  console.error(`Download failed: ${res.status} ${res.statusText}`);
+let text = null;
+for (const url of urls) {
+  console.log(`Fetching ${url}`);
+  try {
+    const res = await fetch(url);
+    if (res.ok) {
+      text = await res.text();
+      break;
+    }
+    console.error(`  failed: ${res.status} ${res.statusText}`);
+  } catch (err) {
+    console.error(`  failed: ${err.message}`);
+  }
+}
+if (text == null) {
+  console.error('All sources failed; leaving existing data untouched.');
   process.exit(1);
 }
 
-const text = await res.text();
 const rows = text.trimStart().startsWith('[') ? JSON.parse(text) : parseCsv(text);
 const records = normalizeAll(rows);
 
