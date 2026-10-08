@@ -12,6 +12,7 @@ one file per month plus `index.json`). No backend.
 - `npm run format` / `npm run format:check` — Prettier
 - `npm run fetch-data` — replace sample data with the full NASA dataset
 - `npm run ukmon -- --from <dir> | --days N | --start/--end | --resume` — build UK meteor month files
+- `python3 analysis/fall_points.py <summary dir> --month YYYYMM [--shower NAME]` — meteorite fall-point model (see `analysis/README.md`)
 
 Before committing: `npm run format:check && npm test && npm run build`.
 
