@@ -1,0 +1,212 @@
+[
+  {
+    "id": "s1",
+    "name": "Hoba",
+    "recclass": "Iron, IVB",
+    "mass": 60000000,
+    "fall": "Found",
+    "year": 1920,
+    "lat": -19.58333,
+    "lon": 17.91667
+  },
+  {
+    "id": "s2",
+    "name": "Cape York",
+    "recclass": "Iron, IIIAB",
+    "mass": 58200000,
+    "fall": "Found",
+    "year": 1818,
+    "lat": 76.13333,
+    "lon": -64.93333
+  },
+  {
+    "id": "s3",
+    "name": "Campo del Cielo",
+    "recclass": "Iron, IAB-MG",
+    "mass": 50000000,
+    "fall": "Found",
+    "year": 1576,
+    "lat": -27.46667,
+    "lon": -60.58333
+  },
+  {
+    "id": "s4",
+    "name": "Canyon Diablo",
+    "recclass": "Iron, IAB-MG",
+    "mass": 30000000,
+    "fall": "Found",
+    "year": 1891,
+    "lat": 35.05,
+    "lon": -111.03333
+  },
+  {
+    "id": "s5",
+    "name": "Gibeon",
+    "recclass": "Iron, IVA",
+    "mass": 26000000,
+    "fall": "Found",
+    "year": 1836,
+    "lat": -25.5,
+    "lon": 18.0
+  },
+  {
+    "id": "s6",
+    "name": "Mundrabilla",
+    "recclass": "Iron, IAB-ung",
+    "mass": 24000000,
+    "fall": "Found",
+    "year": 1911,
+    "lat": -30.78333,
+    "lon": 127.55
+  },
+  {
+    "id": "s7",
+    "name": "Sikhote-Alin",
+    "recclass": "Iron, IIAB",
+    "mass": 23000000,
+    "fall": "Fell",
+    "year": 1947,
+    "lat": 46.16,
+    "lon": 134.65333
+  },
+  {
+    "id": "s8",
+    "name": "Bacubirito",
+    "recclass": "Iron, ungrouped",
+    "mass": 22000000,
+    "fall": "Found",
+    "year": 1863,
+    "lat": 26.2,
+    "lon": -107.83333
+  },
+  {
+    "id": "s9",
+    "name": "Willamette",
+    "recclass": "Iron, IIIAB",
+    "mass": 15500000,
+    "fall": "Found",
+    "year": 1902,
+    "lat": 45.36667,
+    "lon": -122.58333
+  },
+  {
+    "id": "s10",
+    "name": "Jilin",
+    "recclass": "H5",
+    "mass": 4000000,
+    "fall": "Fell",
+    "year": 1976,
+    "lat": 44.05,
+    "lon": 126.16667
+  },
+  {
+    "id": "s11",
+    "name": "Allende",
+    "recclass": "CV3",
+    "mass": 2000000,
+    "fall": "Fell",
+    "year": 1969,
+    "lat": 26.96667,
+    "lon": -105.31667
+  },
+  {
+    "id": "s12",
+    "name": "Norton County",
+    "recclass": "Aubrite",
+    "mass": 1100000,
+    "fall": "Fell",
+    "year": 1948,
+    "lat": 39.68333,
+    "lon": -99.86667
+  },
+  {
+    "id": "s13",
+    "name": "Mbale",
+    "recclass": "L5/6",
+    "mass": 150000,
+    "fall": "Fell",
+    "year": 1992,
+    "lat": 1.06667,
+    "lon": 34.16667
+  },
+  {
+    "id": "s14",
+    "name": "Ensisheim",
+    "recclass": "LL6",
+    "mass": 127000,
+    "fall": "Fell",
+    "year": 1491,
+    "lat": 47.86667,
+    "lon": 7.35
+  },
+  {
+    "id": "s15",
+    "name": "Murchison",
+    "recclass": "CM2",
+    "mass": 100000,
+    "fall": "Fell",
+    "year": 1969,
+    "lat": -36.61667,
+    "lon": 145.2
+  },
+  {
+    "id": "s16",
+    "name": "Chelyabinsk",
+    "recclass": "LL5",
+    "mass": 100000,
+    "fall": "Fell",
+    "year": 2013,
+    "lat": 54.81667,
+    "lon": 61.11667
+  },
+  {
+    "id": "s17",
+    "name": "Zagami",
+    "recclass": "Martian (shergottite)",
+    "mass": 18000,
+    "fall": "Fell",
+    "year": 1962,
+    "lat": 11.73333,
+    "lon": 7.08333
+  },
+  {
+    "id": "s18",
+    "name": "Peekskill",
+    "recclass": "H6",
+    "mass": 12570,
+    "fall": "Fell",
+    "year": 1992,
+    "lat": 41.28333,
+    "lon": -73.91667
+  },
+  {
+    "id": "s19",
+    "name": "Nakhla",
+    "recclass": "Martian (nakhlite)",
+    "mass": 10000,
+    "fall": "Fell",
+    "year": 1911,
+    "lat": 31.31667,
+    "lon": 30.35
+  },
+  {
+    "id": "s20",
+    "name": "Tagish Lake",
+    "recclass": "C2-ung",
+    "mass": 10000,
+    "fall": "Fell",
+    "year": 2000,
+    "lat": 59.70444,
+    "lon": -134.20139
+  },
+  {
+    "id": "s21",
+    "name": "Almahata Sitta",
+    "recclass": "Ureilite-an",
+    "mass": 3950,
+    "fall": "Fell",
+    "year": 2008,
+    "lat": 20.74575,
+    "lon": 32.41275
+  }
+]

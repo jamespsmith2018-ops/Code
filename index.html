@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore recorded meteorite falls and finds around the world."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☄️</text></svg>"
+    />
+    <title>Meteorite Tracker</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>☄️ Meteorite Tracker</h1>
+      <p id="stats" class="stats" aria-live="polite">Loading data…</p>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Filters">
+        <form id="filters" class="filters">
+          <label>
+            Name
+            <input type="search" name="query" placeholder="e.g. Allende" autocomplete="off" />
+          </label>
+
+          <label>
+            Observed
+            <select name="fall">
+              <option value="all">Falls &amp; finds</option>
+              <option value="Fell">Seen falling</option>
+              <option value="Found">Found later</option>
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Year</legend>
+            <input type="number" name="yearFrom" placeholder="From" inputmode="numeric" />
+            <input type="number" name="yearTo" placeholder="To" inputmode="numeric" />
+          </fieldset>
+
+          <label>
+            Minimum mass (kg)
+            <input type="number" name="minMassKg" min="0" step="any" placeholder="0" />
+          </label>
+
+          <button type="reset">Clear filters</button>
+        </form>
+
+        <section id="details" class="details" hidden></section>
+      </aside>
+
+      <div id="map" class="map" role="region" aria-label="Meteorite map"></div>
+    </main>
+
+    <footer class="site-footer">
+      Data:
+      <a href="https://data.nasa.gov/" target="_blank" rel="noopener"
+        >NASA Meteoritical Society Meteorite Landings</a
+      >
+      · Map ©
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener"
+        >OpenStreetMap</a
+      >
+      contributors
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
